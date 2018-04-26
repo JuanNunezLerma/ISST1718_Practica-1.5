@@ -5,10 +5,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Confirmacion de Registro</title>
+<title>Identificacion correcta</title>
 </head>
 <body>
-Registro confirmado. Pulse OK.
+Login correcto. Pulse OK.
 
 <form action="ConfirmacionRegistro" method="POST">
 	<br><input type="hidden" name="nombre" id="nombre" value="${nombre}"></br>

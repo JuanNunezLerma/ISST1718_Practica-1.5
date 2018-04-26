@@ -24,6 +24,16 @@ public class UsuarioDTO implements Serializable{
 	private String apellidos;
 	private String email;
 	
+	public UsuarioDTO(String nombre, String apellidos, String email) {
+		this.nombre=nombre;
+		this.apellidos=apellidos;
+		this.email=email;
+	}
+	
+	public UsuarioDTO() {
+		
+	}
+	
 	
 	public String getNombre() {
 		return nombre;

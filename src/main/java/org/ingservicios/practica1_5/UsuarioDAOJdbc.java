@@ -50,6 +50,7 @@ public class UsuarioDAOJdbc implements UsuarioInterfaz {
 		String sql = "select * from usuarios where email = ?";
 		Object[ ] parametros = {email}; //Array de objetos
 		UsuarioMapper mapper = new UsuarioMapper();
+		System.out.println(email);
 		List<UsuarioDTO> usuarios = this.jdbcTemplate.query(sql, parametros, mapper);
 		if (usuarios.isEmpty()){
 			return null;

@@ -6,8 +6,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -34,7 +35,7 @@ public class HomeController {
 	
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
+	public String home(Locale locale, Model mod, HttpServletRequest req, HttpServletResponse response) {
 		logger.info("Bienvenido! El cliente es {}.", locale);
 		
 		Date date = new Date();
@@ -42,9 +43,46 @@ public class HomeController {
 		
 		String formattedDate = dateFormat.format(date);
 		
-		model.addAttribute("serverTime", formattedDate );
-		
-		return "index";
+		mod.addAttribute("serverTime", formattedDate );
+				
+		// se busca la cookie de email
+		Cookie[ ] cookies = req.getCookies( );
+		String cookieName ="emailCookie";
+		String emailAddress = "";
+			
+		if (cookies != null){
+			for (Cookie cookie: cookies){
+				if (cookieName.equals(cookie.getName())) 
+					emailAddress =	cookie.getValue();
+			}
+		}
+			
+		//Se comprueba si la cookie no existe:
+		if (emailAddress.equals("")){
+			return "index";
+			//url = "/registro.jsp"; //Se ofrecerá registrarse
+		}
+		else{
+		// En este caso, se rellenan los datos del usuario ya registrado
+		// buscando en la base de datos por el valor del email
+			UsuarioDTO usuarioreg = dao.buscaUsuario(emailAddress);
+		//Se añade a la sesión				
+	 		HttpSession sesion=req.getSession(true);
+	 		System.out.println("Sesion activada");
+	 		sesion.setMaxInactiveInterval(180);
+	 		sesion.setAttribute("nombre",usuarioreg.getNombre());
+	 		sesion.setAttribute("apellidos",usuarioreg.getApellidos());
+	 		sesion.setAttribute("email",usuarioreg.getEmail());
+	 		int [] carrito = { 0, 0, 0, 0, 0, 0 };
+	 		sesion.setAttribute("carrito", carrito);
+				
+	 		mod.addAttribute("nombre",usuarioreg.getNombre());
+	 		mod.addAttribute("apellidos",usuarioreg.getApellidos());
+	 		mod.addAttribute("email",usuarioreg.getEmail());
+			return "informacionAcceso";
+			//url = “/welcome.jsp”; //Se dará la bienvenida al usuario
+		}
+
 	}
 	
 	@RequestMapping(value = "/Acceso", method = RequestMethod.POST)
@@ -73,8 +111,8 @@ public class HomeController {
 	@Autowired
 	private UsuarioInterfaz dao;
 	
-	@RequestMapping(value = "/Registrarse", method = {RequestMethod.POST,RequestMethod.POST,RequestMethod.GET})
-	public String Registrarse(HttpServletRequest req, Model mod) {
+	@RequestMapping(value = "/Registrarse", method = {RequestMethod.POST,RequestMethod.GET})
+	public String Registrarse(HttpServletRequest req, Model mod, HttpServletResponse response) {
 		
 		System.out.println(req.getSession(false)==null);
 		
@@ -83,27 +121,24 @@ public class HomeController {
 	    UsuarioNew.setApellidos(req.getParameter("apellidos"));
 	    UsuarioNew.setEmail(req.getParameter("email"));
 	    
+	    String nombre=UsuarioNew.getNombre();
+		String apellidos=UsuarioNew.getApellidos();
+		String email=UsuarioNew.getEmail();
+		
+		mod.addAttribute("nombre",nombre);
+		mod.addAttribute("apellidos",apellidos);
+		mod.addAttribute("email",email);
 	    
+	    Cookie c = new Cookie ("emailCookie",email);
+	    c.setMaxAge(20);
+	    c.setPath("/");
+	    response.addCookie(c);
 	    
 	    if(dao.buscaUsuario(UsuarioNew.getEmail())!=null){
-	    	String nombre=UsuarioNew.getNombre();
-			String apellidos=UsuarioNew.getApellidos();
-			String email=UsuarioNew.getEmail();
-			mod.addAttribute("nombre",nombre);
-			mod.addAttribute("apellidos",apellidos);
-			mod.addAttribute("email",email);
-
-	    	return "informacionAcceso";
+	    	return "ConfirmaLogin";
 	    }
 	    else {	    	
-	    	String nombre=UsuarioNew.getNombre();
-			String apellidos=UsuarioNew.getApellidos();
-			String email=UsuarioNew.getEmail();
-			mod.addAttribute("nombre",nombre);
-			mod.addAttribute("apellidos",apellidos);
-			mod.addAttribute("email",email);
 	    	dao.insertaUsuario(UsuarioNew);
-	    	
 	    	return "ConfirmaRegistro";
 	    }      
 		
@@ -115,6 +150,8 @@ public class HomeController {
 	    String nombre = req.getParameter("nombre");
 	 	String apellidos = req.getParameter("apellidos");
 	 	String email = req.getParameter("email");
+
+	 	int carrito [] = { 0,0,0,0,0,0 };
 	 	
 	 	System.out.println(nombre + " " + apellidos + " "+ email);
 
@@ -130,14 +167,17 @@ public class HomeController {
 	 			req.setAttribute("nombre", nombre);
 	 			req.setAttribute("apellidos",apellidos);
 	 			req.setAttribute("email",email);
+	 			
 	 			HttpSession sesion=req.getSession(true);
 	 			System.out.println("Sesion activada");
-	 			sesion.setMaxInactiveInterval(10);
+	 			sesion.setMaxInactiveInterval(180);
 	 			sesion.setAttribute("nombre",nombre);
 	 			sesion.setAttribute("apellidos",apellidos);
 	 			sesion.setAttribute("email",email);
+
+	 			sesion.setAttribute("carrito", carrito);
 	 			//response.setContentType("text/html");
-	 			System.out.println(nombre + " " + apellidos + " "+ email);
+	 			System.out.println(nombre + " " + apellidos + " "+ email + " " + carrito);
 	 			
 	 			return "informacionAcceso";
 	 		}
@@ -148,10 +188,15 @@ public class HomeController {
 			nombre=(String)sesion.getAttribute("nombre");
  			apellidos=(String)sesion.getAttribute("apellidos");
  			email=(String)sesion.getAttribute("email");
+ 			
+ 			carrito=(int[])sesion.getAttribute("carrito");
+ 			
  			req.setAttribute("nombre", nombre);
  			req.setAttribute("apellidos",apellidos);
  			req.setAttribute("email",email);
-			System.out.println(nombre + " " + apellidos + " "+ email);
+ 			req.setAttribute("carrito", carrito);
+ 			
+			System.out.println(nombre + " " + apellidos + " "+ email + " " + carrito);
  			
 			return "informacionAcceso";
 
@@ -160,5 +205,96 @@ public class HomeController {
 	}
 	//En /Carrito, hacer arraylist de 6 objetos donde cada vez que pinche en un objeto se incremente en uno esa posicion
 	//Si ps4, es el objeto 2, que la segunda posicion del array sea 2.
+	
+	@RequestMapping(value = "/Carrito", method = {RequestMethod.POST,RequestMethod.GET})
+	public String Carrito(HttpServletRequest req, Model mod) {
+		
+		HttpSession sesion=req.getSession();
+		System.out.println("Recuperamos datos de sesion");
+		String nombre=(String)sesion.getAttribute("nombre");
+		String apellidos=(String)sesion.getAttribute("apellidos");
+		String email=(String)sesion.getAttribute("email");
+			
+		int carrito [] = { 0,0,0,0,0,0 };
+		carrito=(int[])sesion.getAttribute("carrito");
+		System.out.println(carrito==null);
+		String id = req.getParameter("id");
+		
+		if(id.equals("180 Euros")) {
+			carrito[0]++;		
+		}
+		if(id.equals("280 Euros")) {
+			carrito[1]++;		
+		}
+		if(id.equals("279 Euros")) {
+			carrito[2]++;		
+		}
+		if(id.equals("50 Euros")) {
+			carrito[3]++;		
+		}
+		if(id.equals("30 Euros")) {
+			carrito[4]++;		
+		}
+		if(id.equals("60 Euros")) {
+			carrito[5]++;		
+		}
+		
+		System.out.println(carrito);
+		System.out.println(nombre);
+		mod.addAttribute("nombre",nombre);
+		mod.addAttribute("apellidos",apellidos);
+		mod.addAttribute("email",email);
+
+		sesion.setAttribute("carrito", carrito);		
+	
+		return "informacionAcceso";
+	}
+	
+	@RequestMapping(value = "/CalculaTotal", method = {RequestMethod.POST,RequestMethod.GET})
+	public String CalculaTotal(HttpServletRequest req, Model mod) {
+		float precio_total=0;
+		
+		HttpSession sesion=req.getSession();
+		System.out.println("Recuperamos el carrito");
+		int carrito [] = { 0,0,0,0,0,0 };
+		carrito=(int[])sesion.getAttribute("carrito");
+		
+		for (int i=0; i<carrito.length; i++) {
+			switch (i) {
+				case 0:
+					precio_total=precio_total+carrito[0]*180;
+					break;
+				case 1:
+					precio_total=precio_total+carrito[1]*280;
+					break;
+				case 2:
+					precio_total=precio_total+carrito[2]*279;
+					break;
+				case 3:
+					precio_total=precio_total+carrito[3]*50;
+					break;
+				case 4:
+					precio_total=precio_total+carrito[4]*30;
+					break;
+				case 5:
+					precio_total=precio_total+carrito[5]*60;
+					break;
+			}
+		}
+		
+		mod.addAttribute("precio_total",precio_total);
+		
+		return "finalizaCompra";
+	}
+	
+	@RequestMapping(value = "/ConfirmaPago", method = {RequestMethod.POST,RequestMethod.GET})
+	public String ConfirmaPago(HttpServletRequest req, Model mod) {
+		return "pagoConfirmado";
+	}
+	
+	@RequestMapping(value = "/CancelaCompra", method = {RequestMethod.POST,RequestMethod.GET})
+	public String CancelaCompra(HttpServletRequest req, Model mod) {
+		return "pagoCancelado";
+	}
 	
 }
