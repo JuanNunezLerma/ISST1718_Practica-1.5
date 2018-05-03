@@ -11,7 +11,7 @@
 	Nombre:<br><input type="text" name="nombre" id="nombre"></br>
 	Apellidos:<br><input type="text" name="apellidos" id="apellidos"></br>
 	Email:<br><input type="email" name="email" id="email"></br>
-	<br><input type="submit" value="Registrarse"></br>
+	<br><input type="submit" value="Actualizar datos"></br>
 	</form>
 
 </body>

@@ -57,6 +57,8 @@ public class HomeController {
 			}
 		}
 			
+		System.out.println("El email que tiene la cookie es: " + emailAddress);
+		
 		//Se comprueba si la cookie no existe:
 		if (emailAddress.equals("")){
 			return "index";
@@ -130,7 +132,7 @@ public class HomeController {
 		mod.addAttribute("email",email);
 	    
 	    Cookie c = new Cookie ("emailCookie",email);
-	    c.setMaxAge(20);
+	    c.setMaxAge(60);
 	    c.setPath("/");
 	    response.addCookie(c);
 	    
@@ -306,10 +308,12 @@ public class HomeController {
 		
 		UsuarioDTO usuarioreg = dao.buscaUsuario(email);
 		//Se añade a la sesión				
-			
-	 	mod.addAttribute("nombre",usuarioreg.getNombre());
-	 	mod.addAttribute("apellidos",usuarioreg.getApellidos());
-		mod.addAttribute("email",usuarioreg.getEmail());
+		
+		if(usuarioreg!=null) {
+		 	mod.addAttribute("nombre",usuarioreg.getNombre());
+		 	mod.addAttribute("apellidos",usuarioreg.getApellidos());
+			mod.addAttribute("email",usuarioreg.getEmail());
+		}
 	
 		return "MiCuenta";
 	}
@@ -321,7 +325,7 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/actualizaDatos", method = {RequestMethod.POST,RequestMethod.GET})
-	public String actualizaDatos(HttpServletRequest req, Model mod) {
+	public String actualizaDatos(HttpServletRequest req, Model mod, HttpServletResponse response) {
 				
 		UsuarioDTO UsuarioNew = new UsuarioDTO();
 		UsuarioNew.setNombre(req.getParameter("nombre"));
@@ -332,11 +336,34 @@ public class HomeController {
 		System.out.println("Recuperamos email");
 		String email=(String)sesion.getAttribute("email");
 		
+		dao.modificaUsuario(UsuarioNew, email);
+		
+		Cookie[ ] cookies = req.getCookies( );
+		String cookieName ="emailCookie";
+		String emailAddress = "";
+			
+		//Buscamos la cookie y la eliminamos, ya que el email ha cambiado.
+		if (cookies != null){
+			for (Cookie cookie: cookies){
+				if (cookieName.equals(cookie.getName())) 
+					cookie.setMaxAge(0);
+			}
+		}
+		
+		//Añadimos la nueva cookie
+		Cookie c = new Cookie ("emailCookie",UsuarioNew.getEmail());
+	    c.setMaxAge(60);
+	    c.setPath("/");
+	    response.addCookie(c);
+		
+	    //Actualizamos los datos en la sesion
+		sesion.setAttribute("nombre",UsuarioNew.getNombre());
+ 		sesion.setAttribute("apellidos",UsuarioNew.getApellidos());
+ 		sesion.setAttribute("email",UsuarioNew.getEmail());
 		mod.addAttribute("nombre",UsuarioNew.getNombre());
 	 	mod.addAttribute("apellidos",UsuarioNew.getApellidos());
 		mod.addAttribute("email",UsuarioNew.getEmail());
 		
-		dao.modificaUsuario(UsuarioNew, email);
 		return "datosModificados";
 	}
 	
