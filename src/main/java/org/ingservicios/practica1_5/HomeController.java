@@ -297,4 +297,47 @@ public class HomeController {
 		return "pagoCancelado";
 	}
 	
+	@RequestMapping(value = "/MiCuenta", method = {RequestMethod.POST,RequestMethod.GET})
+	public String MiCuenta(HttpServletRequest req, Model mod) {
+		
+		HttpSession sesion=req.getSession();
+		System.out.println("Recuperamos email");
+		String email=(String)sesion.getAttribute("email");
+		
+		UsuarioDTO usuarioreg = dao.buscaUsuario(email);
+		//Se añade a la sesión				
+			
+	 	mod.addAttribute("nombre",usuarioreg.getNombre());
+	 	mod.addAttribute("apellidos",usuarioreg.getApellidos());
+		mod.addAttribute("email",usuarioreg.getEmail());
+	
+		return "MiCuenta";
+	}
+	
+	@RequestMapping(value = "/ModificarDatos", method = {RequestMethod.POST,RequestMethod.GET})
+	public String ModificarDatos(HttpServletRequest req, Model mod) {
+		
+		return "nuevosDatos";
+	}
+	
+	@RequestMapping(value = "/actualizaDatos", method = {RequestMethod.POST,RequestMethod.GET})
+	public String actualizaDatos(HttpServletRequest req, Model mod) {
+				
+		UsuarioDTO UsuarioNew = new UsuarioDTO();
+		UsuarioNew.setNombre(req.getParameter("nombre"));
+		UsuarioNew.setApellidos(req.getParameter("apellidos"));
+		UsuarioNew.setEmail(req.getParameter("email"));
+		
+		HttpSession sesion=req.getSession();
+		System.out.println("Recuperamos email");
+		String email=(String)sesion.getAttribute("email");
+		
+		mod.addAttribute("nombre",UsuarioNew.getNombre());
+	 	mod.addAttribute("apellidos",UsuarioNew.getApellidos());
+		mod.addAttribute("email",UsuarioNew.getEmail());
+		
+		dao.modificaUsuario(UsuarioNew, email);
+		return "datosModificados";
+	}
+	
 }

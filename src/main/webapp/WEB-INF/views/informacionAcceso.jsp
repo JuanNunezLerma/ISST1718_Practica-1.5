@@ -60,7 +60,7 @@ Datos de Acceso.
         <li><a href="#">Contacto</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Mi cuenta</a></li>
+        <li><a href="/practica1_5/MiCuenta"><span class="glyphicon glyphicon-user"></span> Mi cuenta</a></li>
         <li><a href="/practica1_5/CalculaTotal"><span class="glyphicon glyphicon-shopping-cart"></span> Carro de la Compra</a></li>
       </ul>
     </div>

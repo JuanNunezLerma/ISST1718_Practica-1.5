@@ -54,7 +54,13 @@ public class UsuarioDAOJdbc implements UsuarioInterfaz {
 		List<UsuarioDTO> usuarios = this.jdbcTemplate.query(sql, parametros, mapper);
 		if (usuarios.isEmpty()){
 			return null;
-		  }else 
+		}else 
 			return usuarios.get(0);
-		  }
+	}
+	
+	public void modificaUsuario(UsuarioDTO usuario, String email){
+		String sql = "update usuarios set nombre=?, apellidos=?, email=? where email=?";
+		Object[ ] parametros = {usuario.getNombre(),usuario.getApellidos(),usuario.getEmail(), email};
+		this.jdbcTemplate.update(sql,parametros);
+	}
 }
