@@ -57,7 +57,7 @@ Datos de Acceso.
       <ul class="nav navbar-nav">
         <li class="active"><a href="#">Inicio</a></li>
         <li><a href="/practica1_5/ConfirmacionRegistro">Productos</a></li>
-        <li><a href="#">Contacto</a></li>
+        <li><a href="/practica1_5/Contacto">Contacto</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="/practica1_5/MiCuenta"><span class="glyphicon glyphicon-user"></span> Mi cuenta</a></li>

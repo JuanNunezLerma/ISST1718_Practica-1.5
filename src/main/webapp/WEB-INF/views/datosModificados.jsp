@@ -57,7 +57,7 @@ Datos de Acceso.
       <ul class="nav navbar-nav">
         <li class="active"><a href="#">Inicio</a></li>
         <li><a href="/practica1_5/ConfirmacionRegistro">Productos</a></li>
-        <li><a href="#">Contacto</a></li>
+        <li><a href="/practica1_5/Contacto">Contacto</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="/practica1_5/MiCuenta"><span class="glyphicon glyphicon-user"></span> Mi cuenta</a></li>
@@ -67,13 +67,27 @@ Datos de Acceso.
   </div>
 </nav>
 
-Los datos han sido actualizados en el sistema:
-<p>Nombre: ${nombre}
-<p>Apellidos: ${apellidos}
-<p>Email: ${email}
-<form action="ConfirmacionRegistro" method="post">
-	<br><input type="submit" value="Volver a Inicio"></br>
-</form>
+<div class="container">    
+  <div class="row">
+
+      <div class="panel panel-primary">
+        <div class="panel-heading">Informacion: </div>
+        <p><div class="panel-body"><p><center>Los datos han sido actualizados en el sistema. Pulse volver a inicio.</center></p>
+		<center>
+			
+			<p><b>Nombre: </b>${nombre}
+			<p><b>Apellidos:</b> ${apellidos}
+			<p><b>Email: </b>${email}
+			<form action="ConfirmacionRegistro" method="post">
+				<br><input type="submit" value="Volver a Inicio"></br>
+			</form>
+		</form></center>
+      </div>
+    </div>
+  	</div>
+ </div>
+
+
 
 
 

@@ -1,8 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
 <%@ page session="false" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html lang="es">
+<html lang="en">
 <head>
   <title>Gaming Online</title>
   <meta charset="utf-8">
@@ -31,6 +29,12 @@
   </style>
 </head>
 <body>
+
+Datos de Acceso. 
+<br>SESIÓN
+<p>Nombre: ${nombre}
+<p>Apellidos: ${apellidos}
+<p>Email: ${email}
 
 <div class="jumbotron">
   <div class="container text-center">
@@ -63,27 +67,22 @@
   </div>
 </nav>
 
-<center>El precio total es ${precio_total}.
-<form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_top">
-<input type="hidden" name="cmd" value="_xclick">
-<input type="hidden" name="business" value="LKMDG9S4BC8QC">
-<input type="hidden" name="lc" value="ES">
-<input type="hidden" name="item_name" value="CompraTotal">
-<input type="hidden" name="amount" value="${precio_total}">
-<input type="hidden" name="currency_code" value="EUR">
-<input type="hidden" name="button_subtype" value="services">
-<input type="hidden" name="no_note" value="0">
-<input type="hidden" name="cn" value="Añadir instrucciones especiales para el vendedor:">
-<input type="hidden" name="no_shipping" value="2">
-<input type="hidden" name="rm" value="1">
-<input type="hidden" name="return" value="http://localhost:8081/practica1_5/ConfirmaPago">
-<input type="hidden" name="cancel_return" value="http://localhost:8081/practica1_5/CancelaCompra">
-<input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynowCC_LG.gif:NonHosted">
-<input type="image" src="https://www.sandbox.paypal.com/es_ES/ES/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal, la forma rápida y segura de pagar en Internet.">
-<img alt="" border="0" src="https://www.sandbox.paypal.com/es_ES/i/scr/pixel.gif" width="1" height="1">
-</form></center>
+<div class="container">    
+  <div class="row">
 
+      <div class="panel panel-primary">
+        <div class="panel-heading">Contacto</div>
+        <p><div class="panel-body"><p><center>Alumnos: </center></p>
+		<center>
+		<p><b>Nombre: </b>Juan Núñez Lerma
+		<p><b>Nombre: </b>Pedro Javier Sáez Mira
+		<form action="ConfirmacionRegistro" method="post">
+			<br><input type="submit" value="Volver a Inicio"></br>
+		</form></center>
+      </div>
+    </div>
+  	</div>
+ </div>
 
 </body>
 </html>
-

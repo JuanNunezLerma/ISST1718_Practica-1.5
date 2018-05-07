@@ -132,7 +132,7 @@ public class HomeController {
 		mod.addAttribute("email",email);
 	    
 	    Cookie c = new Cookie ("emailCookie",email);
-	    c.setMaxAge(60);
+	    c.setMaxAge(60); //Establecida a 60 segundos para pruebas.
 	    c.setPath("/");
 	    response.addCookie(c);
 	    
@@ -352,11 +352,11 @@ public class HomeController {
 		
 		//Añadimos la nueva cookie
 		Cookie c = new Cookie ("emailCookie",UsuarioNew.getEmail());
-	    c.setMaxAge(60);
+	    c.setMaxAge(60); //Establecida a 60 segundos para pruebas.
 	    c.setPath("/");
 	    response.addCookie(c);
 		
-	    //Actualizamos los datos en la sesion
+	    //Actualizamos los datos en la sesion.
 		sesion.setAttribute("nombre",UsuarioNew.getNombre());
  		sesion.setAttribute("apellidos",UsuarioNew.getApellidos());
  		sesion.setAttribute("email",UsuarioNew.getEmail());
@@ -365,6 +365,12 @@ public class HomeController {
 		mod.addAttribute("email",UsuarioNew.getEmail());
 		
 		return "datosModificados";
+	}
+	
+	@RequestMapping(value = "/Contacto", method = {RequestMethod.POST,RequestMethod.GET})
+	public String Contacto(HttpServletRequest req, Model mod) {
+		
+		return "contacto";
 	}
 	
 }

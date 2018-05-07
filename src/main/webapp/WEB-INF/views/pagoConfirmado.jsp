@@ -53,7 +53,7 @@
       <ul class="nav navbar-nav">
         <li class="active"><a href="#">Inicio</a></li>
         <li><a href="/practica1_5/ConfirmacionRegistro">Productos</a></li>
-        <li><a href="#">Contacto</a></li>
+        <li><a href="/practica1_5/Contacto">Contacto</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="/practica1_5/MiCuenta"><span class="glyphicon glyphicon-user"></span> Mi cuenta</a></li>
@@ -63,9 +63,17 @@
   </div>
 </nav>
 
-<center>El pago se ha realizado correctamente.</center>
-Pulse aquí para redireccionar a la página de inicio. <button><a href="/practica1_5/ConfirmacionRegistro">INICIO</a></button>
+<div class="container">    
+  <div class="row">
 
+      <div class="panel panel-primary">
+        <div class="panel-heading">Informacion: </div>
+        <p><div class="panel-body"><p><center>El pago se ha realizado correctamente.</center>
+			<center>Pulse aquí para redireccionar a la página de inicio. <button><a href="/practica1_5/ConfirmacionRegistro">INICIO</a></button></center></p>
+      </div>
+    </div>
+  	</div>
+ </div>
 </body>
 </html>
 
