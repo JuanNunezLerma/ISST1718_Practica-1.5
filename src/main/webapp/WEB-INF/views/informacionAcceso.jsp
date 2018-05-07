@@ -30,12 +30,6 @@
 </head>
 <body>
 
-Datos de Acceso. 
-<br>SESIÓN
-<p>Nombre: ${nombre}
-<p>Apellidos: ${apellidos}
-<p>Email: ${email}
-
 <div class="jumbotron">
   <div class="container text-center">
     <h1>Gaming Online</h1>      
